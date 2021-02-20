@@ -4,12 +4,29 @@
 #include <cstdlib> 
 #include <time.h>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <vector>
+#include <ctime>
 
 typedef std::pair<int, int> edge;
-typedef std::map<double, std::vector<edge> > dist_graph;
+typedef std::unordered_map<double, std::vector<edge> > dist_graph;
 
+struct graph
+{
+	dist_graph d_graph;
+	std::vector<double> edges;
+	~graph();
+};
+
+graph::~graph(){
+
+}
+
+
+// HINT function
+double cutoff_func(int node_cnt, int dim){
+	return (double) 1.44740965e-05*node_cnt + 1.53826169e-01*dim+0.05;
+}
 
 // euclidean_distance
 double euclidean_distance(double* v1, double * v2, int dim){
@@ -37,37 +54,47 @@ double** create_uniform_vertices(int dim, int node_cnt,int rand_seed){
 
 // create graph
 
-dist_graph create_random_graph(int dim, int node_cnt, int rand_seed){
+graph create_random_graph(int dim, int node_cnt, int rand_seed){
 	// make usre the input values are positive
 	assert(dim>0); 
 	assert(node_cnt>0);
 	// initiate graph
-	dist_graph res;
+	graph res;
 
+	double cutoff_wt = cutoff_func(node_cnt, dim);
 	if (dim==1){  //one dimension case
 		srand(rand_seed);
 		for (int i = 0; i<node_cnt-1; i++){
 			for(int j=i+1; j<node_cnt; j++){
 				double weight = (double) rand()/RAND_MAX;
-				if (res.find(weight) == res.end()){
-					res.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
+				if (res.d_graph.find(weight) == res.d_graph.end()){
+					res.d_graph.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
 				}
 				// printf("from frunction: weight: %f,i:%d, j:%d\n", weight, i,j);
-				res[weight].push_back(edge (i,j));
+				res.d_graph[weight].push_back(edge (i,j));
+
+				if(weight<=cutoff_wt){
+					res.edges.push_back(weight);
+				}
 			}
 		}
 	}
 	else{
 		// multi-dimension case. Generate vertices coordinates, then compute distances
 		double** vertices = create_uniform_vertices(dim, node_cnt, rand_seed);
+
 		for (int i = 0; i<node_cnt-1; i++){
 			for(int j=i+1; j<node_cnt; j++){
 				double weight = euclidean_distance(vertices[i], vertices[j], dim);
-				if (res.find(weight) == res.end()){
-					res.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
+				if (res.d_graph.find(weight) == res.d_graph.end()){
+					res.d_graph.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
 				}
 				// printf("from frunction: weight: %f,i:%d, j:%d\n", weight, i,j);
-				res[weight].push_back(edge (i,j));
+				res.d_graph[weight].push_back(edge (i,j));
+
+				if(weight<=cutoff_wt){
+					res.edges.push_back(weight);
+				}
 			}
 		}
 		free (vertices);
@@ -96,7 +123,7 @@ void Union(int* rank, int* parent, int root_x, int root_y){
 }
 
 // construct MST and compute the total edge cost
-double kruskal_weight(dist_graph g, int node_cnt){
+double kruskal_weight(graph g, int node_cnt){
 	// initiate parent array and rank array
 	int parent[node_cnt];
 	int rank[node_cnt];
@@ -110,28 +137,30 @@ double kruskal_weight(dist_graph g, int node_cnt){
 
 	double mst_weight = 0;
 	// countruct MST
-	dist_graph::iterator it = g.begin();
-	for (it = g.begin(); it != g.end(); it++){
-		std::vector<edge>::iterator jt;
-		if(edge_cnt==0){
-				break;
-			}
-		for(jt = (it->second).begin(); jt != (it->second).end(); jt++){
-			if(edge_cnt==0){
-				break;
-			}
-			int x = jt->first;
-			int y = jt->second;
+	std::sort(g.edges.begin(), g.edges.end());
+	int edge_index = 0;
+	while (edge_cnt>0){
+		double cur_edge_weight = g.edges.at(edge_index);
+
+		std::vector<edge> vertices = g.d_graph.find(cur_edge_weight)->second;
+		std::vector<edge>::iterator it;
+
+		for(it = vertices.begin(); it != vertices.end(); it++){
+			int x = it->first;
+			int y = it->second;
 			int root_x = Find(parent, x);
 			int root_y = Find(parent,y);
 			if (root_x!=root_y){
 				Union(rank, parent, root_x, root_y);
-				mst_weight += it->first;
-				edge_cnt--;
-			}
+				mst_weight += cur_edge_weight;
+				}
 		}
+		edge_cnt--;
 	}
+
 	
+
+
 	return mst_weight;
 }
 
@@ -145,12 +174,15 @@ int main(int argc, char const *argv[])
 	double total = 0;
 	for (int i = 0; i<n_trail; i++){
 		int rand_seed = rand();
-		dist_graph d = create_random_graph(dim, node_cnt, rand_seed);
-		total += kruskal_weight(d, node_cnt);
+		graph d = create_random_graph(dim, node_cnt, rand_seed);
+		double weight = kruskal_weight(d, node_cnt);
+		total += weight;
+		// printf("%d\t%d\t%f\n", node_cnt, dim, weight);
 	}
 
 	printf("Averge weight: %f\tnumpoints: %d\tnumtrials: %d\tdimensions: %d\n",
 	total/n_trail, node_cnt, n_trail, dim);
+
 
 	
 
