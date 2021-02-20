@@ -25,7 +25,7 @@ graph::~graph(){
 
 // HINT function
 double cutoff_func(int node_cnt, int dim){
-	return (double) 1.44740965e-05*node_cnt + 1.53826169e-01*dim+0.05;
+	return (double) 1.44740965e-05*node_cnt + 1.53826169e-01*dim+0.6;
 }
 
 // euclidean_distance
@@ -141,7 +141,6 @@ double kruskal_weight(graph g, int node_cnt){
 	int edge_index = 0;
 	while (edge_cnt>0){
 		double cur_edge_weight = g.edges.at(edge_index);
-
 		std::vector<edge> vertices = g.d_graph.find(cur_edge_weight)->second;
 		std::vector<edge>::iterator it;
 
@@ -153,14 +152,12 @@ double kruskal_weight(graph g, int node_cnt){
 			if (root_x!=root_y){
 				Union(rank, parent, root_x, root_y);
 				mst_weight += cur_edge_weight;
+				edge_cnt--;
 				}
 		}
-		edge_cnt--;
+		edge_index++;
+		
 	}
-
-	
-
-
 	return mst_weight;
 }
 
@@ -177,7 +174,6 @@ int main(int argc, char const *argv[])
 		graph d = create_random_graph(dim, node_cnt, rand_seed);
 		double weight = kruskal_weight(d, node_cnt);
 		total += weight;
-		// printf("%d\t%d\t%f\n", node_cnt, dim, weight);
 	}
 
 	printf("Averge weight: %f\tnumpoints: %d\tnumtrials: %d\tdimensions: %d\n",
