@@ -76,8 +76,9 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 				// printf("from frunction: weight: %f,i:%d, j:%d\n", weight, i,j);
 				res.d_graph[weight].push_back(edge (i,j));
 
-				if(weight<=100){
+				if(weight<=cutoff_wt && weight != recent_weight){
 					res.edges.push_back(weight);
+					double recent_weight = weight;
 				}
 			}
 		}
