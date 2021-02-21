@@ -7,7 +7,9 @@
 #include <unordered_map>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 #include <chrono>
+#include <cassert>
 
 typedef std::pair<int, int> edge;
 typedef std::unordered_map<double, std::vector<edge> > dist_graph;

@@ -9,6 +9,8 @@
 #include <ctime>
 #include <chrono>
 #include <math.h> 
+#include <algorithm>
+#include <cassert>
 
 typedef std::pair<int, int> edge;
 typedef std::unordered_map<double, std::vector<edge> > dist_graph;
