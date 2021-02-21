@@ -8,6 +8,7 @@
 #include <vector>
 #include <ctime>
 #include <chrono>
+#include <math.h> 
 
 typedef std::pair<int, int> edge;
 typedef std::unordered_map<double, std::vector<edge> > dist_graph;
@@ -26,7 +27,7 @@ graph::~graph(){
 
 // HINT function
 double cutoff_func(int node_cnt, int dim){
-	return (double) 1.44740965e-05*node_cnt + 1.53826169e-01*dim+0.6;
+	return (double) -.02298154*log2(node_cnt) + 0.07643103*dim+0.2;
 }
 
 // euclidean_distance
