@@ -57,7 +57,7 @@ double** create_uniform_vertices(int dim, int node_cnt, int rand_seed){
 
 // create graph
 graph create_random_graph(int dim, int node_cnt, int rand_seed){
-	double recent_weight
+	double recent_weight;
 	// make usre the input values are positive
 	assert(dim>0); 
 	assert(node_cnt>0);
@@ -86,7 +86,7 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 	else{
 		// multi-dimension case. Generate vertices coordinates, then compute distances
 		double** vertices = create_uniform_vertices(dim, node_cnt, rand_seed);
-
+		printf("uniform vertices created");
 		for (int i = 0; i<node_cnt-1; i++){
 			for(int j=i+1; j<node_cnt; j++){
 				double weight = euclidean_distance(vertices[i], vertices[j], dim);

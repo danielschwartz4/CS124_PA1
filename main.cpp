@@ -35,8 +35,8 @@ int main(int argc, char const *argv[])
 		total += weight;
 	}
 
-	printf("Average weight: %f\tnumpoints: %d\tnumtrials: %d\tdimensions: %d\n",
-	total/n_trail, node_cnt, n_trail, dim);
+  printf("%f\t%d\t%d\t%d\n", total/n_trail, node_cnt, n_trail, dim);
+
 	auto t2 = std::chrono::high_resolution_clock::now();
 	auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 	std::cout << "total duration: " << duration2 << std::endl;
