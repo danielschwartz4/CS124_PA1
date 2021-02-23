@@ -65,8 +65,15 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 	assert(node_cnt>0);
 	// initiate graph
 	graph res;
+	
+	double cutoff_wt;
+	if (node_cnt < 50){
+		cutoff_wt = 100;
+	}
+	else{
+		cutoff_wt = cutoff_func(node_cnt, dim);
+	}
 
-	double cutoff_wt = cutoff_func(node_cnt, dim);
 	if (dim==0){  //one dimension case
 		srand(rand_seed);
 		for (int i = 0; i<node_cnt-1; i++){
