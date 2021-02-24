@@ -4,7 +4,7 @@
 // Included comments below so you can see our process of timing parts of the program
 int main(int argc, char const *argv[])
 {  
-	auto t1 = std::chrono::high_resolution_clock::now();
+	// auto t1 = std::chrono::high_resolution_clock::now();
 	int flag =  atoi(argv[1]);
 	int node_cnt = atoi(argv[2]);
 	int n_trail = atoi(argv[3]);
@@ -26,7 +26,7 @@ int main(int argc, char const *argv[])
 		// std::cout << "FULL graph duration: " << duration1 << std::endl;
 
     // std::cout << "Kruskal start" << std::endl;
-		auto k1 = std::chrono::high_resolution_clock::now();
+		// auto k1 = std::chrono::high_resolution_clock::now();
 		double weight = kruskal_weight(g, node_cnt);
 		// auto k2 = std::chrono::high_resolution_clock::now();
 		// auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>( k2 - k1 ).count();

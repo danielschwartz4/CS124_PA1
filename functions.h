@@ -84,8 +84,6 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 						res.d_graph.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
 					}
 					res.d_graph[weight].push_back(edge (i,j));
- 
-				
 					res.edges.push_back(weight);
 				}
 			}
