@@ -78,8 +78,8 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 		for (int i = 0; i<node_cnt-1; i++){
 			
 			for(int j=i+1; j<node_cnt; j++){
+				weight = (double) rand()/RAND_MAX;
 				if(weight<=cutoff_wt){
-					weight = (double) rand()/RAND_MAX;
 					if (res.d_graph.find(weight) == res.d_graph.end()){
 						res.d_graph.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
 					}
