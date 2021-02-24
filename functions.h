@@ -28,7 +28,12 @@ graph::~graph(){
 
 // HINT function
 double cutoff_func(int node_cnt, int dim){
-	return (double) -0.02298154*log2(node_cnt) + 0.07643103*dim+0.3;
+	if (node_cnt < 50){
+		return 100;
+	}
+	else{
+		return (double) -0.02298154*log2(node_cnt) + 0.07643103*dim+0.3;
+	}
 }
 
 
@@ -65,16 +70,10 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 	assert(node_cnt>0);
 	// initiate graph
 	graph res;
-	
-	double cutoff_wt;
-	if (node_cnt < 50){
-		cutoff_wt = 100;
-	}
-	else{
-		cutoff_wt = cutoff_func(node_cnt, dim);
-	}
 
-	if (dim==0){  //one dimension case
+	double cutoff_wt = cutoff_func(node_cnt, dim);
+
+	if (dim==0){  //0 dimension case
 		srand(rand_seed);
 		for (int i = 0; i<node_cnt-1; i++){
 			// Print alerts
@@ -116,7 +115,6 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 		free (vertices);
 	}
 	return res;
-
 }
 
 int Find(int* parent, int x){
@@ -152,35 +150,38 @@ double kruskal_weight(graph g, int node_cnt){
 
 	// MST edge count = |V| -1
 	int edge_cnt = node_cnt-1;
-	// int vertices_accessed = 0;
 
 	double mst_weight = 0;
 	// countruct MST
 	std::sort(g.edges.begin(), g.edges.end());
-
+	double cur_edge_weight;
 	int edge_index = 0;
 	while (edge_cnt>0){
-		// while (vertices_accessed < node_cnt){
-		double cur_edge_weight = g.edges.at(edge_index);
-		std::vector<edge> vertices = g.d_graph.find(cur_edge_weight)->second;
-		std::vector<edge>::iterator it;
-		for(it = vertices.begin(); it != vertices.end(); it++){
-			// printf("cur_edge_weight: %f\n", cur_edge_weight);
-			// printf("edge_cnt: %d\n", edge_cnt);
-			
-			int x = it->first;
-			int y = it->second;
-			int root_x = Find(parent, x);
-			int root_y = Find(parent,y);
-			if (root_x!=root_y){
-				Union(rank, parent, root_x, root_y);
-				mst_weight += cur_edge_weight;
-				edge_cnt--;
-				// vertices_accessed++;
-				}
+		// we don't need to go over edge weights twice
+		if (cur_edge_weight != g.edges.at(edge_index)) {
+			std::cout << g.edges.at(edge_index) << "\n";
+			cur_edge_weight = g.edges.at(edge_index);
+			std::vector<edge> vertices = g.d_graph.find(cur_edge_weight)->second;
+			std::vector<edge>::iterator it;
+			for(it = vertices.begin(); it != vertices.end(); it++){
+				// printf("cur_edge_weight: %f\n", cur_edge_weight);
+				// printf("edge_cnt: %d\n", edge_cnt);
+				
+				int x = it->first;
+				int y = it->second;
+				int root_x = Find(parent, x);
+				int root_y = Find(parent,y);
+				if (root_x!=root_y){
+					Union(rank, parent, root_x, root_y);
+					mst_weight += cur_edge_weight;
+					edge_cnt--;
+					}
+			}
+			edge_index++;
 		}
-		edge_index++;
-		
+		else{
+			edge_index++;
+		}
 	}
 	return mst_weight;
 }
