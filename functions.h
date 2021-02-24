@@ -65,7 +65,7 @@ double** create_uniform_vertices(int dim, int node_cnt, int rand_seed){
 
 // create graph
 graph create_random_graph(int dim, int node_cnt, int rand_seed){
-	// make usre the input values are positive
+	// make sure the input values are positive
 	assert(dim >= 0); 
 	assert(node_cnt>0);
 	// initiate graph
@@ -76,7 +76,6 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 	if (dim==0){  //0 dimension case
 		srand(rand_seed);
 		for (int i = 0; i<node_cnt-1; i++){
-			// Print alerts
 			
 			for(int j=i+1; j<node_cnt; j++){
 
@@ -84,7 +83,6 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 				if (res.d_graph.find(weight) == res.d_graph.end()){
 					res.d_graph.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
 				}
-				// printf("from frunction: weight: %f,i:%d, j:%d\n", weight, i,j);
 				res.d_graph[weight].push_back(edge (i,j));
 
 				if(weight<=cutoff_wt){
@@ -107,7 +105,6 @@ graph create_random_graph(int dim, int node_cnt, int rand_seed){
 						if (res.d_graph.find(weight) == res.d_graph.end()){
 							res.d_graph.insert(std::pair<double, std::vector<edge> > (weight, std::vector<edge>()));
 						}
-					// printf("from frunction: weight: %f,i:%d, j:%d\n", weight, i,j);
 						res.d_graph[weight].push_back(edge (i,j));
 					}
 				}
@@ -159,14 +156,11 @@ double kruskal_weight(graph g, int node_cnt){
 	while (edge_cnt>0){
 		// we don't need to go over edge weights twice
 		if (cur_edge_weight != g.edges.at(edge_index)) {
-			std::cout << g.edges.at(edge_index) << "\n";
 			cur_edge_weight = g.edges.at(edge_index);
 			std::vector<edge> vertices = g.d_graph.find(cur_edge_weight)->second;
 			std::vector<edge>::iterator it;
 			for(it = vertices.begin(); it != vertices.end(); it++){
-				// printf("cur_edge_weight: %f\n", cur_edge_weight);
-				// printf("edge_cnt: %d\n", edge_cnt);
-				
+
 				int x = it->first;
 				int y = it->second;
 				int root_x = Find(parent, x);

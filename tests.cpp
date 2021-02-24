@@ -106,27 +106,3 @@ int main(void) {
   double w4 = kruskal_weight(g4, 3);
   std::cout << "weight 4: " << w4 << "\n";
 }
-
-  // Test 4 triangle------------------------------------------
-//   graph g4;
-//   dist_graph d4;
-//   d4.insert(std::pair<double, std::vector<edge> > (4, std::vector<edge>()));
-
-
-//   d4[4].push_back(edge (0, 1));
-//   d4[5].push_back(edge (1, 2));
-//   d4[6].push_back(edge (2, 0));
-
-//   g4.d_graph = d4;
-//   // Add edges
-//   std::vector<double> v4;
- 
-//   v4.push_back(4);
-//   v4.push_back(5);
-//   v4.push_back(6);
-
-//   g4.edges = v4;
-
-//   double w4 = kruskal_weight(g4, 3);
-//   std::cout << "weight 1: " << w4 << "\n";
-// }
